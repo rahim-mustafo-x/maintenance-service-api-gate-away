@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25-jdk AS build
+FROM gradle:9.5.1-jdk25 AS build
 
 WORKDIR /app
 
@@ -6,20 +6,12 @@ ARG PORT
 
 ENV PORT=${PORT}
 
-COPY gradlew .
-COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
-
-RUN chmod +x gradlew
 
 COPY src src
 
 RUN java -version
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends gradle \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN gradle clean bootJar --no-daemon -x test
 
