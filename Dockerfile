@@ -17,7 +17,11 @@ COPY src src
 
 RUN java -version
 
-RUN ./gradlew clean bootJar --no-daemon -x test
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gradle \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN gradle clean bootJar --no-daemon -x test
 
 
 FROM eclipse-temurin:25-jre
