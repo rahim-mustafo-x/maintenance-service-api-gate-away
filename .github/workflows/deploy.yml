@@ -13,47 +13,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-
       - name: Create SSH directory
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-
 
       - name: Create SSH key
         run: |
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
-
-      - name: Copy deployment files
-        run: |
-          scp \
-            -o StrictHostKeyChecking=no \
-            -o UserKnownHostsFile=/dev/null \
-            -i ~/.ssh/deploy_key \
-            -r \
-            Dockerfile \
-            compose.yaml \
-            .env.example \
-            src \
-            pom.xml \
-            mvnw \
-            .mvn \
-            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/api-gateway/"
-
-
-      - name: Create .env and deploy
+      - name: Deploy
         run: |
           ssh \
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -i ~/.ssh/deploy_key \
-            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" << EOF
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" << 'EOF'
 
               set -e
 
-              cd /opt/api-gateway
+              cd /opt/maintenance-service-api-gate-away
+
+              git fetch origin master
+              git reset --hard origin/master
 
               cp .env.example .env
 
