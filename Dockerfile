@@ -1,28 +1,35 @@
-FROM ghcr.io/graalvm/native-image-community:25 AS builder
+FROM eclipse-temurin:25-jdk AS build
 
 WORKDIR /app
 
-COPY . .
+ARG PORT
+
+ENV PORT=${PORT}
+
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
 
 RUN chmod +x gradlew
 
-RUN ./gradlew nativeCompile --no-daemon
+COPY src src
+
+RUN java -version
+
+RUN ./gradlew clean bootJar --no-daemon -x test
 
 
-FROM debian:bookworm-slim
+FROM eclipse-temurin:25-jre
 
 WORKDIR /app
 
-# Non-secret build argument
-ARG PORT=8090
+COPY --from=build \
+    /app/build/libs/*.jar \
+    ./maintenance-service-api-gateway.jar
 
-# Default runtime value
-ENV PORT=${PORT}
-
-COPY --from=builder /app/build/native/nativeCompile/* /app/app
-
-RUN chmod +x /app/app
+RUN chmod +x ./maintenance-service-api-gateway.jar
 
 EXPOSE ${PORT}
 
-ENTRYPOINT ["/app/app"]
+ENTRYPOINT ["java", "-jar", "./maintenance-service-api-gateway.jar"]
