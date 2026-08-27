@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./mvnw clean native:compile -Pnative -DskipTests
+RUN chmod +x gradlew
+
+RUN ./gradlew nativeCompile --no-daemon
 
 
 FROM debian:bookworm-slim
@@ -17,7 +19,7 @@ ARG PORT=8090
 # Default runtime value
 ENV PORT=${PORT}
 
-COPY --from=builder /app/target/* /app/app
+COPY --from=builder /app/build/native/nativeCompile/* /app/app
 
 RUN chmod +x /app/app
 
