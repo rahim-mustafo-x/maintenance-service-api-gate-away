@@ -11,7 +11,7 @@ description = 'maintenance-service-api-gate-away'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -24,6 +24,24 @@ ext {
 }
 
 dependencies {
+    //test
+    testImplementation 'io.rest-assured:rest-assured:6.0.1'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+    implementation 'com.bucket4j:bucket4j_jdk17-core:8.19.0'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:4.1.0'
+
     //open-api-swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2'
     implementation 'org.springdoc:springdoc-openapi-starter-common:3.0.2'

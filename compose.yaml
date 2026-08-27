@@ -1,0 +1,19 @@
+services:
+  api-gateway:
+    image: api-gateway:latest
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PORT: ${PORT}
+
+    container_name: api-gateway
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    ports:
+      - "${PORT}:${PORT}"
