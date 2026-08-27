@@ -11,10 +11,13 @@ import org.safa.maintenanceserviceapigateaway.ApiResponse;
 import org.safa.maintenanceserviceapigateaway.jwt.service.JwtService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
@@ -36,6 +39,18 @@ public class JwtFilter extends OncePerRequestFilter {
             sendUnauthorized(response);
             return;
         }
+
+        var username = jwtService.extractUsername(token);
+
+        //if the roles were ever to be used in security, this field confirms that by receiving role inside the 3rd element, it will be granted with the roles it needed so in that case if something is needed writing here the roles is a practical way to handle this
+        var authentication =
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        null,
+                        Collections.emptyList()
+                );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }
