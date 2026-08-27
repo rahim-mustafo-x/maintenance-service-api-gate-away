@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -27,14 +26,11 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
 
 
-      - name: Add server to known hosts
-        run: |
-          ssh-keyscan "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
-
-
       - name: Copy deployment files
         run: |
           scp \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
             -i ~/.ssh/deploy_key \
             -r \
             Dockerfile \
@@ -50,27 +46,29 @@ jobs:
       - name: Create .env and deploy
         run: |
           ssh \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
             -i ~/.ssh/deploy_key \
             "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" << EOF
 
-            set -e
+              set -e
 
-            cd /opt/api-gateway
+              cd /opt/api-gateway
 
-            cp .env.example .env
+              cp .env.example .env
 
-            sed -i \
-              -e "s|^EUREKA_USERNAME=.*|EUREKA_USERNAME=${{ secrets.EUREKA_USERNAME }}|" \
-              -e "s|^EUREKA_PASSWORD=.*|EUREKA_PASSWORD=${{ secrets.EUREKA_PASSWORD }}|" \
-              -e "s|^EUREKA_URL=.*|EUREKA_URL=${{ secrets.EUREKA_URL }}|" \
-              -e "s|^JWT_SECRET_KEY=.*|JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}|" \
-              -e "s|^PORT=.*|PORT=${{ secrets.PORT }}|" \
-              .env
+              sed -i \
+                -e "s|^EUREKA_USERNAME=.*|EUREKA_USERNAME=${{ secrets.EUREKA_USERNAME }}|" \
+                -e "s|^EUREKA_PASSWORD=.*|EUREKA_PASSWORD=${{ secrets.EUREKA_PASSWORD }}|" \
+                -e "s|^EUREKA_URL=.*|EUREKA_URL=${{ secrets.EUREKA_URL }}|" \
+                -e "s|^JWT_SECRET_KEY=.*|JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}|" \
+                -e "s|^PORT=.*|PORT=${{ secrets.PORT }}|" \
+                .env
 
-            chmod 600 .env
+              chmod 600 .env
 
-            docker compose up -d --build
+              docker compose up -d --build
 
-            docker image prune -f
+              docker image prune -f
 
           EOF
