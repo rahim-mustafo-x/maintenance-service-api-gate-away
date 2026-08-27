@@ -13,7 +13,7 @@ COPY src src
 
 RUN java -version
 
-RUN gradle clean bootJar --no-daemon -x test
+RUN gradle clean bootJar --no-daemon -x test -x processAot
 
 
 FROM eclipse-temurin:25-jre
