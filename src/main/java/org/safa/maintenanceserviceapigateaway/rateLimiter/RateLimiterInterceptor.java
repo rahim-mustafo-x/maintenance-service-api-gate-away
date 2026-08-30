@@ -40,7 +40,8 @@ public class RateLimiterInterceptor implements HandlerInterceptor {
         Bucket bucket;
         if (uri.contains("/auth") && Set.of("POST", "DELETE", "PATCH").contains(httpMethod)) {
             bucket = rateLimiterService.resolveStrictBucket(sessionKey);
-        } else if (uri.contains("/scroll") && httpMethod.contains("GET")) {
+            //todo remove /scroll if not used in the project
+        } else if ((uri.contains("/scroll") || uri.contains("/search")) && httpMethod.contains("GET")) {
             bucket = rateLimiterService.resolveScrollBucket(sessionKey);
         }else {
             bucket = rateLimiterService.resolveRegularBucket(sessionKey);
