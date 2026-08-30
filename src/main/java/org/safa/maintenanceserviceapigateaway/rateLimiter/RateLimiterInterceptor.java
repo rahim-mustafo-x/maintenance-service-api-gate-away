@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Set;
+
 @Component
 @RequiredArgsConstructor
 public class RateLimiterInterceptor implements HandlerInterceptor {
@@ -36,7 +38,7 @@ public class RateLimiterInterceptor implements HandlerInterceptor {
 
         }
         Bucket bucket;
-        if (uri.contains("/auth") && (httpMethod.contains("POST") || httpMethod.contains("PUT") || httpMethod.contains("DELETE"))) {
+        if (uri.contains("/auth") && Set.of("POST", "DELETE", "PATCH").contains(httpMethod)) {
             bucket = rateLimiterService.resolveStrictBucket(sessionKey);
         } else if (uri.contains("/scroll") && httpMethod.contains("GET")) {
             bucket = rateLimiterService.resolveScrollBucket(sessionKey);

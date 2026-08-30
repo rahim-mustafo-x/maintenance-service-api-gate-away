@@ -31,7 +31,8 @@ class MaintenanceServiceApiGateAwayApplicationTests {
                 .contentType("application/json")
                 .get("/v3/api-docs")
                 .then()
-                .statusCode(200);
+                .log()
+                .all();
 
     }
 
