@@ -12,12 +12,12 @@ import org.safa.maintenanceserviceapigateaway.jwt.service.JwtService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -47,7 +47,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 new UsernamePasswordAuthenticationToken(
                         username,
                         null,
-                        Collections.emptyList()
+                        //this is for achieving the user to get the role type so it will be easy when using hasRole or @Prefix("hasRole(...)")
+                        Arrays.stream(jwtService.extractRoles(token)).map(SimpleGrantedAuthority::new).toList()
                 );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

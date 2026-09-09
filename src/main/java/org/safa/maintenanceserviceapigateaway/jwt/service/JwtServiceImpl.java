@@ -25,6 +25,11 @@ public class JwtServiceImpl implements JwtService{
     }
 
     @Override
+    public String[] extractRoles(String token) {
+        return extractClaim(token, claims -> claims.get("roles", String[].class));
+    }
+
+    @Override
     public boolean isTokenExpired(String token) {
         try {
             Claims claims = extactAllClaims(token);
