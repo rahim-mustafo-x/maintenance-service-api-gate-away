@@ -30,4 +30,13 @@ public class GatewayConfig {
                 .filter(stripPrefix(1))
                 .build();
     }
+
+    @Bean
+    public RouterFunction<ServerResponse> jobServiceRoute() {
+        return route("job-service")
+                .route(path("/job-service/**"), http())
+                .filter(lb("JOB-SERVICE"))
+                .filter(stripPrefix(1))
+                .build();
+    }
 }

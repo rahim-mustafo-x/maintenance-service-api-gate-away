@@ -71,6 +71,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().contains("/auth");
+        return request.getRequestURI().contains("/auth")
+                || request.getRequestURI().contains("/v1/job/chat");
     }
 }
