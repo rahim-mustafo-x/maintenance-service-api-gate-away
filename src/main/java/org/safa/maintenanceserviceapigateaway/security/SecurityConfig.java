@@ -30,7 +30,7 @@ public class SecurityConfig {
             "/{service}/api-docs/**",
             "/{service}/v3/api-docs/**",
             "/{service}/auth/**",
-            "/v1/job/chat"
+            "/v1/job/chat-register"
     };
 
     @Bean
