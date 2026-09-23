@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         var token = authHeader.substring(7);
 
-        if (!jwtService.isTokenExpired(token)) {
+        if (jwtService.isTokenExpired(token)) {
             sendUnauthorized(response);
             return;
         }
@@ -48,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         username,
                         null,
                         //this is for achieving the user to get the role type so it will be easy when using hasRole or @Prefix("hasRole(...)")
-                        Arrays.stream(jwtService.extractRoles(token)).map(SimpleGrantedAuthority::new).toList()
+                        jwtService.extractRoles(token).stream().map(SimpleGrantedAuthority::new).toList()
                 );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -71,7 +70,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().contains("/auth")
-                || request.getRequestURI().contains("/v1/job/chat");
+        return request.getRequestURI().startsWith("/user-service/auth");
     }
 }

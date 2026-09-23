@@ -1,12 +1,13 @@
 package org.safa.maintenanceserviceapigateaway.jwt.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
 
 @Service
@@ -25,15 +26,21 @@ public class JwtServiceImpl implements JwtService{
     }
 
     @Override
-    public String[] extractRoles(String token) {
-        return extractClaim(token, claims -> claims.get("roles", String[].class));
+    public List<String> extractRoles(String token) {
+        return extractClaim(token, claims -> {
+            List<?> roles = claims.get("roles", List.class);
+
+            return roles.stream()
+                    .map(String::valueOf)
+                    .toList();
+        });
     }
 
     @Override
     public boolean isTokenExpired(String token) {
         try {
             Claims claims = extactAllClaims(token);
-            return !claims.getExpiration().before(new Date());
+            return claims.getExpiration().before(new Date());
         } catch (Exception e) {
             return false;
         }
@@ -42,11 +49,6 @@ public class JwtServiceImpl implements JwtService{
     @Override
     public long extractUserId(String token) {
         return extractClaim(token, claims -> claims.get("userId", Long.class));
-    }
-
-    private Date extractExpiration(String token) {
-        //takes the period of time of the token to be expired
-        return extractClaim(token, Claims::getExpiration);
     }
 
     @Override
