@@ -39,4 +39,22 @@ public class GatewayConfig {
                 .filter(stripPrefix(1))
                 .build();
     }
+
+    @Bean
+    public RouterFunction<ServerResponse> messageServiceRoute() {
+        return route("message-service")
+                .route(path("/message-service/**"), http())
+                .filter(lb("MESSAGE-SERVICE"))
+                .filter(stripPrefix(1))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> telegramServiceRoute() {
+        return route("telegram-service")
+                .route(path("/telegram-service/**"), http())
+                .filter(lb("TELEGRAM-SERVICE"))
+                .filter(stripPrefix(1))
+                .build();
+    }
 }
