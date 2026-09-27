@@ -93,8 +93,6 @@ jobs:
             cp .env.example .env
 
             sed -i \
-              -e "s|^EUREKA_USERNAME=.*|EUREKA_USERNAME=$EUREKA_USERNAME|" \
-              -e "s|^EUREKA_PASSWORD=.*|EUREKA_PASSWORD=$EUREKA_PASSWORD|" \
               -e "s|^EUREKA_URL=.*|EUREKA_URL=$EUREKA_URL|" \
               -e "s|^JWT_SECRET_KEY=.*|JWT_SECRET_KEY=$JWT_SECRET_KEY|" \
               -e "s|^PORT=.*|PORT=$PORT|" \

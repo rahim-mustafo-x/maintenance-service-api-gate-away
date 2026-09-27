@@ -21,17 +21,17 @@ public class SecurityConfig {
     //this is jwt token needs for before basic security to make it basic forum
     private final JwtFilter filter;
 
-    private static final String[] PUBLIC_ENDPOINTS = {
+    public static final String[] PUBLIC_ENDPOINTS = {
             "/favicon.ico",
             "/v3/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/{service}/swagger-ui/**",
-            "/{service}/api-docs/**",
-            "/{service}/docs/**",
-            "/{service}/openapi.json/**",
-            "/{service}/v3/api-docs/**",
-            "/user-service/auth/**",
+            "/*/swagger-ui/**",
+            "/*/api-docs/**",
+            "/*/docs/**",
+            "/*/openapi.json/**",
+            "/*/v3/api-docs/**",
+            "/user-service/auth/**"
     };
 
     @Bean
@@ -41,12 +41,9 @@ public class SecurityConfig {
                                         request.requestMatchers(
                                                 PUBLIC_ENDPOINTS
                                         ).permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/{service}/v1/image/**").permitAll()
-                                        .requestMatchers(HttpMethod.PATCH, "/{service}/v1/image/**").authenticated()
-                                        .requestMatchers(HttpMethod.POST, "/{service}/v1/image/**").authenticated()
-                                        .requestMatchers(HttpMethod.PUT, "/{service}/v1/image/**").authenticated()
-                                        .requestMatchers(HttpMethod.DELETE, "/{service}/v1/image/**").authenticated()
-                                        .requestMatchers("/actuator/**").authenticated()
+                                        .requestMatchers(HttpMethod.GET, "/*/v1/image/**").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/").permitAll()
+                                        .requestMatchers("/actuator/**").permitAll()
                                         .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
