@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to Maintenance Platform</title>
+    <title>Maintenance Service Gateway</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -13,6 +13,7 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: #334155;
+            --accent: #38bdf8;
         }
 
         * {
@@ -39,7 +40,7 @@
         .logo {
             font-size: 1.25rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--accent);
         }
 
         nav a {
@@ -55,19 +56,19 @@
 
         .hero {
             text-align: center;
-            padding: 5rem 1rem 3rem;
+            padding: 4rem 1rem 2rem;
             max-width: 800px;
             margin: 0 auto;
         }
 
         .hero h1 {
-            font-size: 3rem;
+            font-size: 2.75rem;
             margin-bottom: 1rem;
             line-height: 1.2;
         }
 
         .hero p {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--text-muted);
             margin-bottom: 2rem;
         }
@@ -105,13 +106,24 @@
             background-color: var(--card-bg);
         }
 
+        .services-container {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .services-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            border-left: 4px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
-            max-width: 1100px;
-            margin: 4rem auto;
-            padding: 0 1.5rem;
         }
 
         .card {
@@ -119,16 +131,31 @@
             border: 1px solid var(--border);
             padding: 1.5rem;
             border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card h3 {
-            color: var(--primary);
+            color: var(--accent);
             margin-bottom: 0.5rem;
         }
 
         .card p {
             color: var(--text-muted);
             font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .card a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
         }
 
         footer {
@@ -144,36 +171,68 @@
 <body>
 
 <header>
-    <div class="logo">Maintenance Services</div>
+    <div class="logo">Maintenance Services Gateway</div>
     <nav>
-        <a href="/swagger-ui.html">API Docs</a>
-        <a href="/actuator/health">System Health</a>
-        <a href="/user-service/auth/login">Login</a>
+        <a href="/swagger-ui/index.html">API Docs</a>
+        <a href="/actuator/health">Health Check</a>
+        <a href="/eureka">Eureka Server</a>
     </nav>
 </header>
 
 <main>
     <section class="hero">
-        <h1>Central Microservice Gateway</h1>
-        <p>Manage, route, and monitor all service endpoints seamlessly from one unified entry point.</p>
+        <h1>Maintenance & Job Platform API</h1>
+        <p>Connect homeowners with qualified workers, manage job listings, track maintenance tasks, and communicate seamlessly.</p>
         <div class="cta-buttons">
-            <a href="/swagger-ui.html" class="btn btn-primary">Explore API Docs</a>
-            <a href="/actuator/health" class="btn btn-secondary">Check Health</a>
+            <a href="/swagger-ui/index.html" class="btn btn-primary">Swagger Documentation</a>
+            <a href="/actuator/health" class="btn btn-secondary">System Status</a>
         </div>
     </section>
 
-    <section class="features">
-        <div class="card">
-            <h3>User Service</h3>
-            <p>Handles authentication, JWT verification, and user management endpoints.</p>
-        </div>
-        <div class="card">
-            <h3>Message Service</h3>
-            <p>FastAPI microservice providing real-time WebSocket connection channels.</p>
-        </div>
-        <div class="card">
-            <h3>API Gateway</h3>
-            <p>Spring Cloud Gateway managing routing, load balancing, and security filters.</p>
+    <section class="services-container">
+        <h2>Registered Microservices</h2>
+        <div class="features">
+
+            <div class="card">
+                <div>
+                    <h3>Job Service</h3>
+                    <p>Allows homeowners to post maintenance requests and workers to search, apply for, and accept job listings.</p>
+                </div>
+                <a href="/job-service/v3/api-docs">View Spec &rarr;</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h3>User Service</h3>
+                    <p>Manages profiles, authentication, and permissions for both homeowners and service workers.</p>
+                </div>
+                <a href="/user-service/v3/api-docs">View Spec &rarr;</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h3>Message Service</h3>
+                    <p>FastAPI real-time messaging service for direct communication between homeowners and hired workers.</p>
+                </div>
+                <a href="/message-service/openapi.json">View Spec &rarr;</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h3>Image Service</h3>
+                    <p>Handles uploads, storage, and retrieval of job photos, completed work images, and profile avatars.</p>
+                </div>
+                <a href="/image-service/v3/api-docs">View Spec &rarr;</a>
+            </div>
+
+            <div class="card">
+                <div>
+                    <h3>Telegram Service</h3>
+                    <p>Sends instant notifications, job status updates, and alerts directly to users via Telegram bot.</p>
+                </div>
+                <a href="/telegram-service/v3/api-docs">View Spec &rarr;</a>
+            </div>
+
         </div>
     </section>
 </main>
