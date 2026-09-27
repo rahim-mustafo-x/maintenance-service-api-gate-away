@@ -75,6 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return Arrays.stream(SecurityConfig.PUBLIC_ENDPOINTS).toList().stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
+        return Arrays.stream(SecurityConfig.PUBLIC_ENDPOINTS)
+                .anyMatch(pattern -> pathMatcher.match(pattern, path));
     }
 }
