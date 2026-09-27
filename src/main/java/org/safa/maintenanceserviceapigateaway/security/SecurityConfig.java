@@ -22,6 +22,7 @@ public class SecurityConfig {
     private final JwtFilter filter;
 
     public static final String[] PUBLIC_ENDPOINTS = {
+            "/",
             "/favicon.ico",
             "/v3/**",
             "/swagger-ui/**",
@@ -31,7 +32,9 @@ public class SecurityConfig {
             "/*/docs/**",
             "/*/openapi.json/**",
             "/*/v3/api-docs/**",
-            "/user-service/auth/**"
+            "/user-service/auth/**",
+            "/message-service/openapi.json",
+            "/telegram-service/openapi.json"
     };
 
     @Bean
@@ -42,7 +45,6 @@ public class SecurityConfig {
                                                 PUBLIC_ENDPOINTS
                                         ).permitAll()
                                         .requestMatchers(HttpMethod.GET, "/*/v1/image/**").permitAll()
-                                        .requestMatchers(HttpMethod.GET, "/").permitAll()
                                         .requestMatchers("/actuator/**").permitAll()
                                         .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
