@@ -42,7 +42,6 @@ public class JwtFilter extends OncePerRequestFilter {
             sendUnauthorized(response);
             return;
         }
-
         var username = jwtService.extractUsername(token);
 
         //if the roles were ever to be used in security, this field confirms that by receiving role inside the 3rd element, it will be granted with the roles it needed so in that case if something is needed writing here the roles is a practical way to handle this
