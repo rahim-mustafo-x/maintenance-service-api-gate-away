@@ -25,19 +25,11 @@ public class SecurityConfig {
             "/",
             "/favicon.ico",
             "/swagger-ui/**",
-            "/*/swagger-ui/**",
-
-            "/*/v3/api-docs",
+            "/v3/api-docs/**",
             "/*/v3/api-docs/**",
-
             "/user-service/auth/**",
-
-            "/message-service/openapi.json",
             "/message-service/openapi.json/**",
-
-            "/telegram-service/openapi.json",
             "/telegram-service/openapi.json/**",
-
             "/message-service/docs/**",
             "/telegram-service/docs/**"
     };
