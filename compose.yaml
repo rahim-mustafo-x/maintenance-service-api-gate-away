@@ -17,6 +17,7 @@ services:
     restart: unless-stopped
     networks:
       - maintenance-net
+      - service-registry-network
 networks:
   maintenance-net:
     external: true
