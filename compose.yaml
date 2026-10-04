@@ -15,3 +15,8 @@ services:
     container_name: api-gateway
 
     restart: unless-stopped
+    networks:
+      - maintenance-net
+networks:
+  maintenance-net:
+    external: true
