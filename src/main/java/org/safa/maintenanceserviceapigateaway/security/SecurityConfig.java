@@ -51,7 +51,7 @@ public class SecurityConfig {
                                         ).permitAll()
                                         .requestMatchers(HttpMethod.GET, "/*/v1/image/**").permitAll()
                                         .requestMatchers("/actuator/**").permitAll()
-                                        .anyRequest().permitAll())
+                                        .anyRequest().authenticated())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
