@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleTimeout(TimeoutException ex) {
         return build(
                 HttpStatus.GATEWAY_TIMEOUT,
-                "Gateway timeout"
+                ex.getMessage()
         );
     }
 
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     ) {
         return build(
                 HttpStatus.BAD_REQUEST,
-                "Invalid request"
+                ex.getMessage()
         );
     }
 
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     ) {
         return build(
                 HttpStatus.FORBIDDEN,
-                "Access denied"
+                ex.getMessage()
         );
     }
 
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
     ) {
         return build(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                "Unexpected error"
+                ex.getMessage()
         );
     }
 
