@@ -24,17 +24,22 @@ public class SecurityConfig {
     public static final String[] PUBLIC_ENDPOINTS = {
             "/",
             "/favicon.ico",
-            "/v3/**",
             "/swagger-ui/**",
-            "/swagger-ui.html",
             "/*/swagger-ui/**",
-            "/*/api-docs/**",
-            "/*/docs/**",
-            "/*/openapi.json/**",
+
+            "/*/v3/api-docs",
             "/*/v3/api-docs/**",
+
             "/user-service/auth/**",
+
             "/message-service/openapi.json",
-            "/telegram-service/openapi.json"
+            "/message-service/openapi.json/**",
+
+            "/telegram-service/openapi.json",
+            "/telegram-service/openapi.json/**",
+
+            "/message-service/docs/**",
+            "/telegram-service/docs/**"
     };
 
     @Bean
