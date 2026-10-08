@@ -23,6 +23,7 @@ public class MaintenanceServiceApiGateAwayApplication {
         Resource indexHtml = new ClassPathResource("static/index.html");
         return ResponseEntity.ok(indexHtml);
     }
+
     static void main(String[] args) {
         SpringApplication.run(MaintenanceServiceApiGateAwayApplication.class, args);
     }
