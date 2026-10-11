@@ -1,6 +1,7 @@
 package org.safa.maintenanceserviceapigateaway.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,31 +31,43 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        var authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        //if there is no token and it is v1
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
+        try {
+            var authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            //if there is no token and it is v1
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            var token = authHeader.substring(7);
+
+            if (jwtService.isTokenExpired(token)) {
+                sendUnauthorized(response);
+                return;
+            }
+            var username = jwtService.extractUsername(token);
+
+            //if the roles were ever to be used in security, this field confirms that by receiving role inside the 3rd element, it will be granted with the roles it needed so in that case if something is needed writing here the roles is a practical way to handle this
+            var authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            username,
+                            null,
+                            //this is for achieving the user to get the role type so it will be easy when using hasRole or @Prefix("hasRole(...)")
+                            jwtService.extractRoles(token).stream().map(SimpleGrantedAuthority::new).toList()
+                    );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        }catch (ExpiredJwtException e){
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            var responseBody = ApiResponse.builder()
+                    .code(HttpStatus.UNAUTHORIZED.value())
+                    .message("You are not logged in")
+                    .build();
+            ObjectMapper mapper = new ObjectMapper();
+            response.getWriter().write(mapper.writeValueAsString(responseBody));
         }
-        var token = authHeader.substring(7);
-
-        if (jwtService.isTokenExpired(token)) {
-            sendUnauthorized(response);
-            return;
-        }
-        var username = jwtService.extractUsername(token);
-
-        //if the roles were ever to be used in security, this field confirms that by receiving role inside the 3rd element, it will be granted with the roles it needed so in that case if something is needed writing here the roles is a practical way to handle this
-        var authentication =
-                new UsernamePasswordAuthenticationToken(
-                        username,
-                        null,
-                        //this is for achieving the user to get the role type so it will be easy when using hasRole or @Prefix("hasRole(...)")
-                        jwtService.extractRoles(token).stream().map(SimpleGrantedAuthority::new).toList()
-                );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         filterChain.doFilter(request, response);
     }
 
