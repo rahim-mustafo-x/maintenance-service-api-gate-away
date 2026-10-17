@@ -75,7 +75,6 @@ public class JwtFilter extends OncePerRequestFilter {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
         var responseBody = ApiResponse.builder()
                 .code(HttpStatus.UNAUTHORIZED.value())
                 .message("Invalid or expired token")
